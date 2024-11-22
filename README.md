@@ -1,7 +1,3 @@
-Url: http://103.171.85.186/login
-User: admin@mail.com
-Pwd: Admin@2024
-
 API : http://103.171.85.186/api/device
 Payloads :
 {
