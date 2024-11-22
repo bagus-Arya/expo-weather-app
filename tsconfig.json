@@ -12,6 +12,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "components/homepage/TabBar.jsx"  ]
+    "expo-env.d.ts", 
+  ]
 }

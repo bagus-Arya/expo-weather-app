@@ -16,9 +16,8 @@ export default function TabLayout() {
         // headerTintColor: '#fff',
         tabBarStyle: {
           backgroundColor: '#090821',
-          borderTopLeftRadius: 50,
-          borderTopRightRadius: 50,
-
+          borderTopWidth: 0,
+          elevation: 0,
         },
       }}
     >
