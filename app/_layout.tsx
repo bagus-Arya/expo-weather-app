@@ -1,6 +1,6 @@
 import React from "react";
-import { SplashScreen, Stack } from "expo-router";
-import { ThemeProvider, useTheme } from "@/context/theme.context";
+import { Stack } from "expo-router";
+import { ThemeProvider  } from "@/context/theme.context";
 import {
   Poppins_600SemiBold,
   Poppins_300Light,
@@ -26,9 +26,12 @@ export default function _layout() {
   return (
     <ThemeProvider>
       <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="index" />
+        <Stack.Screen name="home" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
   );
 }
+

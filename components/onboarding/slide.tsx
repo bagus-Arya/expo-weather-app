@@ -4,10 +4,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Pressable,
-  Modal,
 } from "react-native";
 import React, { useState } from "react";
-import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
+import { useNavigation } from '@react-navigation/native';
+import { Defs, RadialGradient, Rect, Stop, Svg} from "react-native-svg";
 import { HEIGHT, WIDTH } from "@/configs/constants";
 import { scale, verticalScale } from "react-native-size-matters";
 import {
@@ -30,15 +30,7 @@ export default function Slide({
   totalSlides: number;
 }) {
 
-  const [buttonVisible, setButtonVisible] = useState(false);
-
-  const onSlideOne = (index: number, setIndex: (index: number) => void) => {
-    if (index === 2) {
-      setButtonVisible(true);
-    } else {
-      setIndex(index + 1);
-    }
-  };
+  const navigation = useNavigation();
 
   return (
     <>
@@ -100,7 +92,7 @@ export default function Slide({
           />
         ))}
       </View>
-      
+
       {/* Next Button */}
       {index >= totalSlides - 1 && (
         <LinearGradient
@@ -115,10 +107,11 @@ export default function Slide({
               width: "100%",
               height: "100%",
             }}
-            onPress={() => onSlideOne(index, setIndex)}
+            onPress={() => navigation.navigate('home') }
           >
-            <Text style={styles.loginButtonText}>Next</Text>
+            <Text style={styles.loginButtonText}>LOGIN</Text>
           </Pressable>
+          
         </LinearGradient>
       )}
     </>

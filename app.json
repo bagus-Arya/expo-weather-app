@@ -9,9 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-img.png",
+      "image": "./assets/images/EFISTRAC.png",
       "resizeMode": "contain",
-      "backgroundColor": "#080393"
+      "backgroundColor": "#090821"
     },
     "ios": {
       "supportsTablet": true

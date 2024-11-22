@@ -9,7 +9,7 @@ import Two from "@/assets/images/onboarding/2.png";
 export const onBoardingSlides: onBoardingSlidesTypes[] = [
   {
     color: "#40E0D0",
-    title: "Moca",
+    title: "EFISTRAC",
     image: (
       <Image
         source={One}
@@ -23,7 +23,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
   },
   {
     color: "#FFC0CB",
-    title: "Login",
+    title: "LOGIN",
     image: (
       <Image
         source={Two}
