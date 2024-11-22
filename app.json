@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "cuaca-benoa-app",
+    "name": "EFISTRAC",
     "slug": "cuaca-benoa-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,10 +17,12 @@
       "supportsTablet": true
     },
     "android": {
+      "name":"EFISTRAC",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.zentexe.cuacabenoaapp"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +34,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "12b056ac-7fb5-4c06-9ec2-02ab453789d1"
+      }
     }
   }
 }
