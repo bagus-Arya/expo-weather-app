@@ -1,9 +1,9 @@
 import { Text, View,  StyleSheet } from 'react-native';
 
-export default function Index() {
+export default function RekapHujan() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tabs Index</Text>
+      <Text style={styles.text}>Rekap hujan</Text>
     </View>
   );
 }
@@ -11,11 +11,11 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
-    color: '#fff',
+    color: '#000000',
   },
 });

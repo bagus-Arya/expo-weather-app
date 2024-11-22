@@ -1,9 +1,9 @@
 import { Text, View,  StyleSheet } from 'react-native';
 
-export default function Home() {
+export default function Riwayat() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home</Text>
+      <Text style={styles.text}>Riwayat</Text>
     </View>
   );
 }

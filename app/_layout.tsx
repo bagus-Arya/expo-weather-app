@@ -13,6 +13,7 @@ import {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
 
+
 export default function _layout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -23,12 +24,13 @@ export default function _layout() {
     Poppins_500Medium,
   });
 
+  
   return (
     <ThemeProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="index" />
-        <Stack.Screen name="home" />
+        <Stack.Screen name="Login" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>

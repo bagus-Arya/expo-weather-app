@@ -1,4 +1,4 @@
-API : http://103.171.85.186/api/device
+`API : http://103.171.85.186/api/device
 Payloads :
 {
     "id" : 1,
@@ -9,4 +9,5 @@ Payloads :
     "tekanan_udara" : 30,
     "kelembaban" : 24,
     "kondisi_baik" : true
-}
+}`
+

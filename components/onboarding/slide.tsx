@@ -107,7 +107,7 @@ export default function Slide({
               width: "100%",
               height: "100%",
             }}
-            onPress={() => navigation.navigate('home') }
+            onPress={() => navigation.navigate('login') }
           >
             <Text style={styles.loginButtonText}>LOGIN</Text>
           </Pressable>

@@ -1,20 +1,24 @@
 import { Tabs } from 'expo-router';
-
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
 export default function TabLayout() {
+  
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#ffd33d',
-        headerStyle: {
-          backgroundColor: '#25292e',
-        },
-        headerShadowVisible: false,
-        headerTintColor: '#fff',
+        tabBarActiveTintColor: '#fff',
+        headerShown: false,
+        // headerStyle: {
+        //   backgroundColor: '#090821',
+        // },
+        // headerTitleAlign: 'center',
+        // headerShadowVisible: false,
+        // headerTintColor: '#fff',
         tabBarStyle: {
-        backgroundColor: '#25292e',
+          backgroundColor: '#090821',
+          borderTopLeftRadius: 50,
+          borderTopRightRadius: 50,
+
         },
       }}
     >
@@ -28,14 +32,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="riwayat"
         options={{
-          title: 'About',
+          title: 'Riwayat',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+            <Ionicons name={focused ? 'timer-sharp' : 'timer-outline'} color={color} size={24}/>
           ),
         }}
       />
+      <Tabs.Screen
+        name="rekapHujan"
+        options={{
+          title: 'Rekap hujan',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'documents-sharp' : 'documents-outline'} color={color} size={24} />
+          ),
+        }}
+      />
+  
     </Tabs>
   );
 }
