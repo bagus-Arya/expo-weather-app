@@ -1,36 +1,37 @@
 import React from "react";
 import { Stack } from "expo-router";
 import { ThemeProvider  } from "@/context/theme.context";
-import {
-  Poppins_600SemiBold,
-  Poppins_300Light,
-  Poppins_400Regular,
-  Poppins_700Bold,
-  Poppins_500Medium,
-  useFonts,
-} from "@expo-google-fonts/poppins";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 
 export default function _layout() {
+
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    Poppins_600SemiBold,
-    Poppins_300Light,
-    Poppins_700Bold,
-    Poppins_400Regular,
-    Poppins_500Medium,
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
   
   return (
     <ThemeProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="index" />
-        <Stack.Screen name="Login" />
+        {/* navigate.navigation use option */}
+        <Stack.Screen name="login" options={{title: 'Login'}} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
