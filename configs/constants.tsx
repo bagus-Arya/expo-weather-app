@@ -5,6 +5,7 @@ import { scale, verticalScale } from "react-native-size-matters";
 import One from "@/assets/images/onboarding/1.png";
 //@ts-ignore
 import Two from "@/assets/images/onboarding/2.png";
+// "Designed by slidesgo / freepik"
 
 export const onBoardingSlides: onBoardingSlidesTypes[] = [
   {

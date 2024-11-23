@@ -1,12 +1,15 @@
 import React, { useRef } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, Animated } from 'react-native';
+import { Text, View, StyleSheet, Image, Animated } from 'react-native';
 
-export default function Weather() {
+export default function Home() {
   // Sample weather data
   const weatherData = {
     location: 'Denpasar',
-    temperature: '25°C',
+    temperature: '25',
     condition: 'Cerah',
+    windSpeed: '10 km/h',
+    humidity: '60%',
+    airPressure: '1013 hPa',
   };
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -22,24 +25,25 @@ export default function Weather() {
       <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
         <Text style={styles.location}>{weatherData.location}</Text>
         <Image source={require('@/assets/images/tabs/Sun.png')} style={styles.icon} />
-        <Text style={styles.temperature}>{weatherData.temperature}</Text>
+        <Text style={styles.temperature}>{weatherData.temperature} °C</Text>
         <Text style={styles.condition}>{weatherData.condition}</Text>
-      </Animated.View>
-      <ScrollView
-        style={styles.scrollView}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false } // Set to false for compatibility
-        )}
-      >
-        <View style={styles.content}>
-          <Text style={styles.contentText}>Scroll down for more content...</Text>
-          {Array.from({ length: 20 }, (_, i) => (
-            <Text key={i} style={styles.contentText}>Content Block {i + 1}</Text>
-          ))}
+        
+        {/* New Weather Data in a horizontal layout */}
+        <View style={styles.weatherRow}>
+          <View style={styles.weatherDetailContainer}>
+          <Text style={styles.weatherText}>Kecepatan Angin</Text>
+            <Text style={styles.weatherDetail}>{weatherData.windSpeed}</Text>
+          </View>
+          <View style={styles.weatherDetailContainer}>
+          <Text style={styles.weatherText}>Kelembaban</Text>
+            <Text style={styles.weatherDetail}>{weatherData.humidity}</Text>
+          </View>
+          <View style={styles.weatherDetailContainer}>
+          <Text style={styles.weatherText}>Tekanan Udara</Text>
+            <Text style={styles.weatherDetail}>{weatherData.airPressure}</Text>
+          </View>
         </View>
-      </ScrollView>
+      </Animated.View>
     </View>
   );
 }
@@ -89,15 +93,24 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 10,
   },
-  scrollView: {
-    marginTop: 200, // Adjust this to match the height of the card
+  weatherRow: {
+    flexDirection: 'row', // Arrange children in a row
+    justifyContent: 'space-between', // Space out the items evenly
+    width: '100%', // Ensure it takes the full width of the card
+    marginTop: 20, // Add some margin for spacing
   },
-  content: {
-    padding: 20,
+  weatherDetailContainer: {
+    flex: 1, // Allow each detail to take equal space
+    alignItems: 'center', // Center the text within each detail
   },
-  contentText: {
+  weatherDetail: {
     color: '#FFFFFF',
-    fontSize: 18,
-    marginVertical: 10,
+    fontSize: 15,
+    textAlign: 'center', // Center the text
+  },
+  weatherText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    textAlign: 'center', // Center the text
   },
 });

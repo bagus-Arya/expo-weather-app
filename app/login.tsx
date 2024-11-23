@@ -13,7 +13,6 @@ import React from "react";
 import { router } from "expo-router";
 // import { useNavigation } from '@react-navigation/native';
 
-
 export default function Login() {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
