@@ -47,10 +47,10 @@ export default function Weather() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090821',
+    backgroundColor: '#040424',
   },
   card: {
-    backgroundColor: '#2E2E3A',
+    backgroundColor: '#08c2ff',
     borderRadius: 15,
     padding: 40,
     alignItems: 'center',

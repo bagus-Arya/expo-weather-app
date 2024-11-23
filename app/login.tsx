@@ -10,7 +10,9 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { useNavigation } from '@react-navigation/native';
+import { router } from "expo-router";
+// import { useNavigation } from '@react-navigation/native';
+
 
 export default function Login() {
   const [email, setEmail] = React.useState<string>("");
@@ -19,7 +21,11 @@ export default function Login() {
   const [passwordIsVisible, setPasswordIsVisible] =
     React.useState<boolean>(false);
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+  // const handleNavigate = () => {
+  //   navigation.navigate('(tabs)');
+  // }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,9 +79,9 @@ export default function Login() {
   
           <TouchableOpacity 
             style={styles.loginButton}
-            onPress={() => navigation.navigate('(tabs)') 
-
-            }>
+            // onPress={handleNavigate}
+            onPress={() => router.push('/(tabs)/home')}
+            >
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 

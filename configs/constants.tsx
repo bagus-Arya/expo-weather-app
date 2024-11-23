@@ -8,7 +8,7 @@ import Two from "@/assets/images/onboarding/2.png";
 
 export const onBoardingSlides: onBoardingSlidesTypes[] = [
   {
-    color: "#40E0D0",
+    color: "#040424",
     title: "EFISTRAC",
     image: (
       <Image
@@ -22,7 +22,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
     subTitle: "Monitoring Cuaca. Pantau Cuaca Sekitar Sebelum Berangkat",
   },
   {
-    color: "#FFC0CB",
+    color: "#FA8C2B",
     title: "LOGIN",
     image: (
       <Image

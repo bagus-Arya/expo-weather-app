@@ -8,7 +8,6 @@ import { useEffect } from 'react';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-
 export default function _layout() {
 
   const [loaded] = useFonts({
@@ -31,7 +30,7 @@ export default function _layout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="index" />
         {/* navigate.navigation use option */}
-        <Stack.Screen name="login" options={{title: 'Login'}} />
+        <Stack.Screen name="login" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>

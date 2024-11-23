@@ -6,7 +6,6 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from '@react-navigation/native';
 import { Defs, RadialGradient, Rect, Stop, Svg} from "react-native-svg";
 import { HEIGHT, WIDTH } from "@/configs/constants";
 import { scale, verticalScale } from "react-native-size-matters";
@@ -17,6 +16,8 @@ import {
   windowWidth,
 } from "@/themes/app.constant";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+
 
 export default function Slide({
   slide,
@@ -29,8 +30,6 @@ export default function Slide({
   setIndex: (value: number) => void;
   totalSlides: number;
 }) {
-
-  const navigation = useNavigation();
 
   return (
     <>
@@ -61,8 +60,8 @@ export default function Slide({
             <Text
               style={{
                 fontSize: fontSizes.FONT30,
-                fontWeight: "600",
-                color: "#05030D",
+                fontWeight: "800",
+                color: "#fff",
                 fontFamily: "Poppins_600SemiBold",
               }}
             >
@@ -73,8 +72,8 @@ export default function Slide({
               style={{
                 paddingVertical: verticalScale(4),
                 fontSize: fontSizes.FONT18,
-                fontWeight: "600",
-                color: "#05030D",
+                fontWeight: "800",
+                color: "#fff",
                 fontFamily: "Poppins_300Light",
               }}
             >
@@ -96,7 +95,7 @@ export default function Slide({
       {/* Next Button */}
       {index >= totalSlides - 1 && (
         <LinearGradient
-          colors={["#6D55FE", "#8976FC"]}
+          colors={["#040424", "#4d646c"]}
           style={styles.loginButton}
         >
           <Pressable
@@ -107,7 +106,7 @@ export default function Slide({
               width: "100%",
               height: "100%",
             }}
-            onPress={() => navigation.navigate('login') }
+            onPress={() => router.push('/login')}
           >
             <Text style={styles.loginButtonText}>LOGIN</Text>
           </Pressable>
