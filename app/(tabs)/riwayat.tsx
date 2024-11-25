@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { fetchMachineLogs, LogMachine } from '@/services/apiLogMachine'; // Adjust the path as necessary
 
 interface WeatherData {
   date: string;
@@ -46,6 +47,9 @@ WeatherCard.propTypes = {
 };
 
 const Riwayat: React.FC = () => {
+  const [machines, setMachines] = useState<LogMachine[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   const weatherDataArray: WeatherData[] = [
     {
       date: '24 November 2024',
@@ -55,47 +59,22 @@ const Riwayat: React.FC = () => {
       atmospheric_pressure: 30,
       humidity: 24,
     },
-    {
-      date: '24 November 2024',
-      temperature: '25°C',
-      time: '18:00',
-      wind_speed: 30,
-      atmospheric_pressure: 30,
-      humidity: 24,
-    },
-    {
-      date: '24 November 2024',
-      temperature: '25°C',
-      time: '18:00',
-      wind_speed: 30,
-      atmospheric_pressure: 30,
-      humidity: 24,
-    },
-    {
-      date: '24 November 2024',
-      temperature: '25°C',
-      time: '18:00',
-      wind_speed: 30,
-      atmospheric_pressure: 30,
-      humidity: 24,
-    },
-    {
-      date: '24 November 2024',
-      temperature: '25°C',
-      time: '18:00',
-      wind_speed: 30,
-      atmospheric_pressure: 30,
-      humidity: 24,
-    },
-    {
-      date: '24 November 2024',
-      temperature: '25°C',
-      time: '18:00',
-      wind_speed: 30,
-      atmospheric_pressure: 30,
-      humidity: 24,
-    },
+    // ... other weather data entries
   ];
+
+  useEffect(() => {
+    const getMachineLogs = async () => {
+      try {
+        const fetchedMachines = await fetchMachineLogs();
+        setMachines(fetchedMachines);
+      } catch (err) {
+        console.error('Error fetching machine logs:', err);
+        setError('Failed to fetch machine logs');
+      }
+    };
+
+    getMachineLogs();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -103,6 +82,16 @@ const Riwayat: React.FC = () => {
         {weatherDataArray.map((data, index) => (
           <WeatherCard key={index} weatherData={data} />
         ))}
+        {error && <Text style={{ color: 'red' }}>{error}</Text>}
+        {machines.length > 0 ? (
+          machines.map(machine => (
+            <View key={machine.id} style={styles.card}>
+              <Text style={styles.machineText}>Machine ID: {machine.machine_id}, Suhu: {machine.suhu}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noDataText}>No machines found.</Text>
+        )}
         <View style={styles.bottomSpacing} />
       </ScrollView>
     </View>
@@ -168,15 +157,24 @@ const styles = StyleSheet.create({
   },
   atmospheric_pressure: {
     color: '#FFD700',
-    fontSize : 12,
+    fontSize: 12,
     marginVertical: 1,
   },
   humidity: {
     color: '#FFFFFF',
     fontSize: 12,
   },
+  machineText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  noDataText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+  },
   bottomSpacing: {
-    height: 20, 
+    height: 20,
   },
 });
 
