@@ -1,51 +1,59 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { fetchMachineLogs, LogMachine } from '@/services/apiLogRains'; // Adjust the import path as necessary
 
-export default function rekapHujan() {
-  // Sample weather data array with statistics
-  const weatherDataArray = [
-    {
-      tanggal: '24 November 2024',
-      temperature: '25',
-      condition: 'Cerah',
-      waktu: '18:00',
-      humidity: '60', // Added humidity
-      windSpeed: '15', // Added wind speed
-    },
-    {
-      tanggal: '25 November 2024',
-      temperature: '22',
-      condition: 'Hujan',
-      waktu: '19:00',
-      humidity: '80', // Added humidity
-      windSpeed: '10', // Added wind speed
-    },
-    {
-      tanggal: '26 November 2024',
-      temperature: '27',
-      condition: 'Cerah Berawan',
-      waktu: '20:00',
-      humidity: '55', // Added humidity
-      windSpeed: '20', // Added wind speed
-    },
-    // Add more entries as needed
-  ];
+export default function RekapHujan() {
+  const [weatherDataArray, setWeatherDataArray] = useState<LogMachine[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchMachineLogs();
+        setWeatherDataArray(data);
+      } catch (err) {
+        setError('Failed to fetch data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {weatherDataArray.map((weatherData, index) => (
-          <View key={index} style={styles.card}>
+        {weatherDataArray.map((machineData) => (
+          <View key={machineData.id} style={styles.card}>
             <View style={styles.row}>
               <View style={styles.leftColumn}>
-                <Text style={styles.temperature}>{weatherData.temperature} °C</Text>
-                <Text style={styles.condition}>{weatherData.condition}</Text>
-                <Text style={styles.statistic}>Humidity: {weatherData.humidity} %</Text>
+                <Text style={styles.temperature}>{machineData.suhu} °C</Text>
+                <Text style={styles.condition}>{machineData.kondisi_baik ? 'Cerah' : 'Hujan'}</Text>
+                <Text style={styles.statistic}>Humidity: {machineData.kelembaban} %</Text>
               </View>
               <View style={styles.rightColumn}>
-                <Text style={styles.tanggal}>{weatherData.tanggal}</Text>
-                <Text style={styles.waktu}>{weatherData.waktu}</Text>
-                <Text style={styles.statistic}>Wind: {weatherData.windSpeed} km/h</Text>
+                <Text style={styles.tanggal}>{new Date(machineData.created_at).toLocaleDateString()}</Text>
+                <Text style={styles.waktu}>{new Date(machineData.created_at).toLocaleTimeString()}</Text>
+                <Text style={styles.statistic}>Wind: {machineData.kecepatan_angin} km/h</Text>
               </View>
             </View>
           </View>
@@ -63,11 +71,27 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 20,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#040424',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#040424',
+  },
+  errorText: {
+    color: '#FF0000',
+    fontSize: 16,
+  },
   card: {
     backgroundColor: '#08c2ff',
-    borderRadius: 10, // Border radius
-    height: 100, // Increased height to accommodate additional text
-    padding: 10, // Reduced padding
+    borderRadius: 10,
+    height: 100,
+    padding: 10,
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -77,44 +101,44 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginBottom: 15, // Spacing between cards
+    marginBottom: 15,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: '100%', // Make sure it takes full height of the card
+    height: '100%',
   },
   leftColumn: {
     flex: 1,
-    alignItems: 'flex-start', // Align items to the left
+    alignItems: 'flex-start',
   },
   rightColumn: {
     flex: 1,
-    alignItems: 'flex-end', // Align items to the right
+    alignItems: 'flex-end',
   },
   temperature: {
     color: '#FFD700',
-    fontSize: 24, // Reduced font size
+    fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 2, // Reduced margin
+    marginVertical: 2,
   },
   condition: {
     color: '#FFFFFF',
-    fontSize: 14, // Reduced font size
+    fontSize: 14,
   },
   tanggal: {
     color: '#FFD700',
-    fontSize: 12, // Reduced font size
-    marginVertical: 1, // Reduced margin
+    fontSize: 12,
+    marginVertical: 1,
   },
   waktu: {
     color: '#FFFFFF',
-    fontSize: 12, // Reduced font size
+    fontSize: 12,
   },
   statistic: {
     color: '#FFFFFF',
-    fontSize: 12, // Font size for statistics
-    marginVertical: 1, // Margin for statistics
+    fontSize: 12,
+    marginVertical: 1,
   },
 });

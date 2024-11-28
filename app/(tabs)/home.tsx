@@ -4,6 +4,7 @@ import { LineChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User, logout } from '@/services/apiAuth';
 import { router } from "expo-router";
+import { BackHandler } from 'react-native';
 
 // Define the possible weather conditions
 type WeatherCondition = 'Cerah' | 'Hujan' | 'Berawan';
@@ -33,7 +34,18 @@ export default function Home() {
         console.error('Error fetching user data:', error);
       }
     };
+    const backAction = () => {
+      // Prevent the default back action
+      // Returning true prevents the back action
+      return true; 
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
     getUserData();
+
+    // Cleanup the event listener on component unmount
+    return () => backHandler.remove();
   }, []);
 
   // Sample weather data
