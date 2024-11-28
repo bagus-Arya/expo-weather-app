@@ -1,9 +1,6 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const client = axios.create({
-  baseURL: 'http://103.171.85.186'
-});
+import client from '@/utils/baseUrl';
 
 export interface User {
   id: number;

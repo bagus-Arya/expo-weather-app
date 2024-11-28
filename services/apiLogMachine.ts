@@ -1,10 +1,6 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Create an Axios client with a base URL
-const client = axios.create({
-  baseURL: 'http://103.171.85.186/api/device/history', // Replace with your API base URL
-});
+import client from '@/utils/baseUrl';
 
 // Define the structure of each machine log
 export type LogMachine = {
@@ -60,7 +56,7 @@ export const fetchMachineLogs = async (page: number = 1): Promise<PaginatedRespo
 
   try {
     // Make the GET request and specify the expected response type
-    const fetchDevice: AxiosResponse<PaginatedResponse<LogMachine>> = await client.get('/', config);
+    const fetchDevice: AxiosResponse<PaginatedResponse<LogMachine>> = await client.get('/api/device/history', config);
     
     // Check if the response data is structured correctly
     if (!fetchDevice.data || !fetchDevice.data.data) {
