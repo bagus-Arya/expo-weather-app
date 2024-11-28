@@ -108,7 +108,7 @@ export default function Slide({
             }}
             onPress={() => router.push('/login')}
           >
-            <Text style={styles.loginButtonText}>LOGIN</Text>
+            <Text style={styles.loginButtonText}>MASUK</Text>
           </Pressable>
           
         </LinearGradient>

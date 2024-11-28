@@ -85,7 +85,6 @@ export default function Home() {
       router.replace('/login');
     } catch (error) {
       console.log('Logout error details:', error);
-      // Still navigate to login even if there's an error
       router.replace('/login');
     } finally {
       // Clear any remaining app state here if needed
@@ -107,7 +106,7 @@ export default function Home() {
               style={styles.logoutButton} 
               onPress={handleLogout}
             >
-              <Text style={styles.logoutText}>Logout</Text>
+              <Text style={styles.logoutText}>Keluar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -152,27 +151,32 @@ export default function Home() {
           <Text style={styles.forecastCondition}>Cerah</Text>
         </View>
         <View style={styles.forecastCard}>
-          <Text style={styles.forecastText}>Besok</Text>
+          <Text style={styles.forecastText}>Senin</Text>
           <Text style={styles.forecastTemperature}>24 °C</Text>
           <Text style={styles.forecastCondition}>Hujan</Text>
         </View>
         <View style={styles.forecastCard}>
-          <Text style={styles.forecastText}>Lusa</Text>
+          <Text style={styles.forecastText}>Selasa</Text>
           <Text style={styles.forecastTemperature}>26 °C</Text>
           <Text style={styles.forecastCondition}>Berawan</Text>
         </View>
         <View style={styles.forecastCard}>
-          <Text style={styles.forecastText}>Hari Ini</Text>
+          <Text style={styles.forecastText}>Rabu</Text>
           <Text style={styles.forecastTemperature}>27 °C</Text>
           <Text style={styles.forecastCondition}>Cerah</Text>
         </View>
         <View style={styles.forecastCard}>
-          <Text style={styles.forecastText}>Besok</Text>
+          <Text style={styles.forecastText}>Kamis</Text>
           <Text style={styles.forecastTemperature}>24 °C</Text>
           <Text style={styles.forecastCondition}>Hujan</Text>
         </View>
         <View style={styles.forecastCard}>
-          <Text style={styles.forecastText}>Lusa</Text>
+          <Text style={styles.forecastText}>Jumat</Text>
+          <Text style={styles.forecastTemperature}>26 °C</Text>
+          <Text style={styles.forecastCondition}>Berawan</Text>
+        </View>
+        <View style={styles.forecastCard}>
+          <Text style={styles.forecastText}>Sabtu</Text>
           <Text style={styles.forecastTemperature}>26 °C</Text>
           <Text style={styles.forecastCondition}>Berawan</Text>
         </View>
@@ -186,8 +190,8 @@ export default function Home() {
           height={220}
           chartConfig={{
             backgroundColor: '#040424',
-            backgroundGradientFrom: '#08c2ff',
-            backgroundGradientTo: '#08c2ff',
+            backgroundGradientFrom: '#FA8C2B',
+            backgroundGradientTo: '#FA8C2B',
             decimalPlaces: 1, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#040424',
   },
   card: {
-    backgroundColor: '#08c2ff',
+    backgroundColor: '#FA8C2B',
     borderRadius: 15,
     padding: 40,
     alignItems: 'center',
@@ -268,12 +272,12 @@ const styles = StyleSheet.create({
   },
   forecastContainer: {
     flexDirection: 'row', // Ensure children are arranged in a row
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 20,
     width: '100%', // Ensure full width for scrolling
   },
   forecastCard: {
-    backgroundColor: '#08c2ff',
+    backgroundColor: '#FA8C2B',
     borderRadius: 10,
     padding: 15,
     alignItems: 'center',
@@ -304,7 +308,7 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     padding: 20,
-    backgroundColor: '#08c2ff',
+    backgroundColor: '#FA8C2B',
     borderRadius: 15,
     marginBottom: 10,
   },
@@ -320,7 +324,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   logoutText: {
-    color: '#08c2ff',
+    color: '#FA8C2B',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Image
 } from "react-native";
 import React from "react";
 import { router } from "expo-router";
@@ -54,8 +55,11 @@ export default function Login() {
           justifyContent: "center",
         }}
       >
+        <Image
+          style={styles.imageLogin}
+          source={require("../assets/images/EFISTRAC.png")}
+        />
         <View style={styles.content}>
-          <Text style={styles.title}>Login</Text>
           <View style={styles.inputContainer}>
             <View style={styles.icon}>
               <Feather name="mail" size={22} color="#7C808D" />
@@ -103,7 +107,7 @@ export default function Login() {
             disabled={isLoading}
           >
             <Text style={styles.loginButtonText}>
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Proses masuk...' : 'Masuk'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -135,6 +139,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 15,
+  },
+  imageLogin: {
+    width: 200,
+    height: 200,
+    marginBottom: 30,
   },
   input: {
     borderBottomWidth: 1.5,

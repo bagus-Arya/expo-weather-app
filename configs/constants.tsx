@@ -24,7 +24,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
   },
   {
     color: "#FA8C2B",
-    title: "LOGIN",
+    title: "MASUK",
     image: (
       <Image
         source={Two}
@@ -34,7 +34,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
         }}
       />
     ),
-    subTitle: "Masuk terlebih dahulu",
+    subTitle: "Masuk terlebih dahulu, supaya kamu dapat melihat informasi cuaca terbaru",
   },
 ];
 
