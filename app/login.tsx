@@ -8,23 +8,41 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-// import { useNavigation } from '@react-navigation/native';
+import { login } from '../services/apiAuth';
 
 export default function Login() {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [passwordIsVisible, setPasswordIsVisible] = React.useState<boolean>(false);
 
-  const [passwordIsVisible, setPasswordIsVisible] =
-    React.useState<boolean>(false);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
 
-  // const navigation = useNavigation();
-  // const handleNavigate = () => {
-  //   navigation.navigate('(tabs)');
-  // }
-
+    setIsLoading(true);
+    try {
+      const response = await login({ email, password });
+      if (response.status) {
+        router.push('/(tabs)/home');
+      } else {
+        Alert.alert('Error', response.message);
+      }
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'Failed to login. Please check your credentials and try again.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,6 +67,8 @@ export default function Login() {
               selectionColor="#3662AA"
               onChangeText={setEmail}
               value={email}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.inputContainer}>
@@ -63,6 +83,7 @@ export default function Login() {
               selectionColor="#3662AA"
               onChangeText={setPassword}
               value={password}
+              autoCapitalize="none"
             />
             <TouchableOpacity
               style={styles.passwordVisibleButton}
@@ -77,13 +98,14 @@ export default function Login() {
           </View>
   
           <TouchableOpacity 
-            style={styles.loginButton}
-            // onPress={handleNavigate}
-            onPress={() => router.push('/(tabs)/home')}
-            >
-            <Text style={styles.loginButtonText}>Login</Text>
+            style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+            onPress={handleLogin}
+            disabled={isLoading}
+          >
+            <Text style={styles.loginButtonText}>
+              {isLoading ? 'Logging in...' : 'Login'}
+            </Text>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -130,6 +152,9 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 10,
     marginTop: 20,
+  },
+  loginButtonDisabled: {
+    backgroundColor: "#666",
   },
   loginButtonText: {
     color: "#fff",

@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 // Create an Axios client with a base URL
 const client = axios.create({
-  baseURL: 'http://103.171.85.186',
+  baseURL: 'http://103.171.85.186/api/device/history', // Replace with your API base URL
 });
 
 // Define the structure of each machine log

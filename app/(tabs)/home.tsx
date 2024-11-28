@@ -1,6 +1,9 @@
-import React, { useRef } from 'react';
-import { Text, View, StyleSheet, Image, Animated, ScrollView } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Image, Animated, ScrollView, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { User, logout } from '@/services/apiAuth';
+import { router } from "expo-router";
 
 // Define the possible weather conditions
 type WeatherCondition = 'Cerah' | 'Hujan' | 'Berawan';
@@ -15,6 +18,24 @@ interface WeatherData {
 }
 
 export default function Home() {
+
+  const [user, setUser] = useState<User | null>(null);
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        if (userData) {
+          setUser(JSON.parse(userData));
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    getUserData();
+  }, []);
+
   // Sample weather data
   const weatherData: WeatherData = {
     location: 'Denpasar',
@@ -24,8 +45,6 @@ export default function Home() {
     humidity: '60%',
     airPressure: '1013 hPa',
   };
-
-  const scrollY = useRef(new Animated.Value(0)).current;
 
   const translateY = scrollY.interpolate({
     inputRange: [0, 200],
@@ -58,8 +77,42 @@ export default function Home() {
     ],
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setUser(null);
+      await AsyncStorage.clear(); // Clear all stored data
+      router.replace('/login');
+    } catch (error) {
+      console.log('Logout error details:', error);
+      // Still navigate to login even if there's an error
+      router.replace('/login');
+    } finally {
+      // Clear any remaining app state here if needed
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
+
+       {/* User Welcome Section */}
+       {user && (
+        <View style={styles.welcomeContainer}>
+          <View style={styles.welcomeHeader}>
+            <View>
+              <Text style={styles.welcomeText}>Welcome, {user.name}</Text>
+              <Text style={styles.emailText}>{user.email}</Text>
+            </View>
+            <TouchableOpacity 
+              style={styles.logoutButton} 
+              onPress={handleLogout}
+            >
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
         <Text style={styles.location}>{weatherData.location}</Text>
         <Image 
@@ -248,5 +301,37 @@ const styles = StyleSheet.create({
   lineChart: {
     marginVertical: 8,
     borderRadius: 16,
+  },
+  welcomeContainer: {
+    padding: 20,
+    backgroundColor: '#08c2ff',
+    borderRadius: 15,
+    marginBottom: 10,
+  },
+  welcomeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  logoutText: {
+    color: '#08c2ff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  welcomeText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  emailText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    opacity: 0.8,
   },
 });
