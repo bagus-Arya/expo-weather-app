@@ -1,13 +1,33 @@
-`API : http://103.171.85.186/api/device
-Payloads :
-{
-    "id" : 1,
-    "lat" : -8.395063999785938,
-    "lng" : 115.66034079999999,
-    "suhu" : 30,
-    "kecepatan_angin" : 30,
-    "tekanan_udara" : 30,
-    "kelembaban" : 24,
-    "kondisi_baik" : true
-}`
+# React Native Weather App
 
+## How to start from this app?
+
+You can follow [this guide](https://reactnative.dev/docs/environment-setup) to setup your environment.
+
+## Install all depedencies:
+```bash
+$ npm install
+```
+
+## Start the app:
+```bash
+$ npx expo start
+```
+
+## Build the app:
+```bash
+$ eas build:configure
+```
+
+## Build the app:
+```bash
+$ eas build --platform android
+$ eas build --platform ios
+$ eas build --platform all
+```
+
+## Build the apk:
+```bash
+$ eas build --platform android --profile preview
+```
+You can follow [this guide](https://docs.expo.dev/build-reference/apk/) to setup your apk.
