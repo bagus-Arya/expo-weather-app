@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import client from '@/utils/baseUrl';
+import client from '@/services/baseUrl';
 
 export interface User {
   id: number;

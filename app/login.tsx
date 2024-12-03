@@ -31,7 +31,7 @@ export default function Login() {
     try {
       const response = await login({ email, password });
       if (response.status) {
-        router.push('/(tabs)/home');
+        router.push('/userDevices');
       } else {
         Alert.alert('Error', response.message);
       }

@@ -22,6 +22,8 @@ export default function Home() {
 
   const [user, setUser] = useState<User | null>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const iconAnimation = useRef(new Animated.Value(0)).current;
+  const spinAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const getUserData = async () => {
@@ -34,20 +36,39 @@ export default function Home() {
         console.error('Error fetching user data:', error);
       }
     };
+
     const backAction = () => {
       // Prevent the default back action
       // Returning true prevents the back action
       return true; 
     };
 
+    const floatAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(iconAnimation, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(iconAnimation, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    floatAnimation.start();
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
     getUserData();
 
-    // Cleanup the event listener on component unmount
-    return () => backHandler.remove();
+    return () => {
+      backHandler.remove();
+      floatAnimation.stop();
+    };
   }, []);
-
+  
   // Sample weather data
   const weatherData: WeatherData = {
     location: 'Denpasar',
@@ -126,9 +147,19 @@ export default function Home() {
 
       <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
         <Text style={styles.location}>{weatherData.location}</Text>
-        <Image 
+        <Animated.Image 
           source={getWeatherIcon(weatherData.condition)} 
-          style={styles.icon} 
+          style={[
+            styles.icon,
+            {
+              transform: [{
+                translateY: iconAnimation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -20],
+                }),
+              }],
+            },
+          ]} 
           resizeMode="contain" 
         />
         <Text style={styles.temperature}>{weatherData.temperature} °C</Text>
@@ -137,14 +168,29 @@ export default function Home() {
         {/* Weather Details */}
         <View style={styles.weatherRow}>
           <View style={styles.weatherDetailContainer}>
+            <Image 
+              source={require('@/assets/images/tabs/angin-icon.png')} 
+              style={styles.iconSmall} 
+              resizeMode="contain" 
+            />
             <Text style={styles.weatherText}>Kecepatan Angin</Text>
             <Text style={styles.weatherDetail}>{weatherData.windSpeed}</Text>
           </View>
           <View style={styles.weatherDetailContainer}>
+            <Image 
+              source={require('@/assets/images/tabs/kelembaban-icon.png')} 
+              style={styles.iconSmall} 
+              resizeMode="contain" 
+            />
             <Text style={styles.weatherText}>Kelembaban</Text>
             <Text style={styles.weatherDetail}>{weatherData.humidity}</Text>
           </View>
           <View style={styles.weatherDetailContainer}>
+            <Image 
+              source={require('@/assets/images/tabs/tekananudara-icon.png')} 
+              style={styles.iconSmall} 
+              resizeMode="contain" 
+            />
             <Text style={styles.weatherText}>Tekanan Udara</Text>
             <Text style={styles.weatherDetail}>{weatherData.airPressure}</Text>
           </View>
@@ -245,21 +291,25 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   temperature: {
     color: '#FFD700',
     fontSize: 64,
     fontWeight: 'bold',
-    marginVertical: 10,
   },
   condition: {
     color: '#FFFFFF',
-    fontSize: 22,
+    fontSize: 25,
+    fontWeight: 'bold',
   },
   icon: {
     width: 150,
     height: 150,
+  },
+  iconSmall:{
+    width: 25,
+    height: 25,
     marginBottom: 10,
   },
   weatherRow: {
@@ -283,18 +333,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   forecastContainer: {
-    flexDirection: 'row', // Ensure children are arranged in a row
+    flexDirection: 'row', 
     marginTop: 10,
     paddingHorizontal: 20,
-    width: '100%', // Ensure full width for scrolling
+    width: '100%', 
   },
   forecastCard: {
     backgroundColor: '#FA8C2B',
     borderRadius: 10,
     padding: 15,
     alignItems: 'center',
-    marginHorizontal: 5, // Adjust margin for spacing between cards
-    minWidth: 100, // Set a minimum width for each card
+    marginHorizontal: 5, 
+    minWidth: 100, 
   },
   forecastText: {
     color: '#FFFFFF',
