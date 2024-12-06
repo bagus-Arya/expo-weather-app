@@ -99,17 +99,6 @@ export default function Home() {
     }
   };
 
-  // Sample data for the line graph
-  const lineChartData = {
-    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-    datasets: [
-      {
-        data: [25, 27, 26, 28, 30, 29, 31], // Sample temperature data
-        strokeWidth: 2, // optional
-      },
-    ],
-  };
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -239,28 +228,6 @@ export default function Home() {
           <Text style={styles.forecastCondition}>Berawan</Text>
         </View>
       </ScrollView>
-
-      {/* Line Graph */}
-      <View style={styles.graphContainer}>
-        <LineChart
-          data={lineChartData}
-          width={350} // Adjust width as needed
-          height={220}
-          chartConfig={{
-            backgroundColor: '#040424',
-            backgroundGradientFrom: '#FA8C2B',
-            backgroundGradientTo: '#FA8C2B',
-            decimalPlaces: 1, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          bezier
-          style={styles.lineChart}
-        />
-      </View>
     </ScrollView>
   );
 }
@@ -359,14 +326,6 @@ const styles = StyleSheet.create({
   forecastCondition: {
     color: '#FFFFFF',
     fontSize: 14,
-  },
-  graphContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  lineChart: {
-    marginVertical: 8,
-    borderRadius: 16,
   },
   welcomeContainer: {
     padding: 20,

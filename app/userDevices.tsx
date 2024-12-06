@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList, ActivityIndicator, StyleSheet, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fetchDeviceList, DeviceList } from '@/services/apiDeviceLists';
+import { fetchDeviceList, DeviceResponse } from '@/services/apiDeviceLists';
 import { MaterialIcons } from '@expo/vector-icons'; // Import the icon library
 import { useRouter } from 'expo-router';
 
+interface DeviceDetailProps {
+    icon: keyof typeof MaterialIcons.glyphMap;
+    value: string | number;
+}
+
+const DeviceDetail: React.FC<DeviceDetailProps> = ({ icon, value }) => (
+    <View style={styles.deviceDetailContainer}>
+        <MaterialIcons name={icon} size={20} color="#007BFF" />
+        <Text style={styles.deviceDetail}>{value}</Text>
+    </View>
+);
+
 const UserDevices = () => {
-    const [devices, setDevices] = useState<DeviceList[]>([]);
+    const [devices, setDevices] = useState<DeviceResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
+    const [machineId, setMachineId] = useState<number>(2);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,10 +47,8 @@ const UserDevices = () => {
     useEffect(() => {
         const getDevices = async () => {
             if (userId === null) return;
-
             try {
-                const deviceData = await fetchDeviceList(userId);
-                console.log('Fetched devices:', deviceData);
+                const deviceData = await fetchDeviceList(userId, machineId);
                 setDevices(deviceData);
             } catch (err) {
                 console.error('Error fetching devices:', err);
@@ -50,9 +61,8 @@ const UserDevices = () => {
                 setLoading(false);
             }
         };
-
         getDevices();
-    }, [userId]);
+    }, [userId, machineId]);
 
     if (loading) {
         return (
@@ -78,28 +88,34 @@ const UserDevices = () => {
             </View>
             
             <FlatList
-                data={devices}
-                keyExtractor={(item) => item.id.toString()}
+                data={devices ? [devices] : []}
+                keyExtractor={item => item.data.id.toString()}
                 renderItem={({ item }) => (
-                  <Pressable
-                    style={styles.deviceCard}
-                    onPress={() => router.push('/(tabs)/home')}
-                  >
-                    <View style={styles.deviceInfo}>
-                        <View style={styles.deviceDetailContainer}>
-                            <MaterialIcons name="place" size={20} color="#007BFF" />
-                            <Text style={styles.deviceDetail}>{item.device.place_name}</Text>
+                    <Pressable 
+                        style={styles.deviceCard}
+                        onPress={() => router.push('/(tabs)/home')}
+                    >
+                        <Text style={[
+                                styles.statusText,
+                                item.status === 'online' ? styles.onlineStatus : styles.offlineStatus
+                            ]}>
+                                {item.status}
+                        </Text>
+                        <View style={styles.deviceInfo}>
+                            <DeviceDetail 
+                                icon="place" 
+                                value={item.data.device.place_name} 
+                            />
+                            <DeviceDetail 
+                                icon="thermostat" 
+                                value={`${item.data.device.suhu}°C`} 
+                            />
+                            <DeviceDetail 
+                                icon="water" 
+                                value={`${item.data.device.kelembaban}%`} 
+                            />
                         </View>
-                        <View style={styles.deviceDetailContainer}>
-                            <MaterialIcons name="thermostat" size={20} color="#007BFF" />
-                            <Text style={styles.deviceDetail}>{item.device.suhu} °C</Text>
-                        </View>
-                        <View style={styles.deviceDetailContainer}>
-                            <MaterialIcons name="water" size={20} color="#007BFF" />
-                            <Text style={styles.deviceDetail}>{item.device.kelembaban} %</Text>
-                        </View>
-                    </View>
-                  </Pressable>
+                    </Pressable>
                 )}
                 contentContainerStyle={styles.listContent}
             />
@@ -178,6 +194,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 20,
     },
+    statusText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textTransform: 'capitalize'
+    },
+    onlineStatus: {
+        color: '#34C759' // Apple's system green
+    },
+    offlineStatus: {
+        color: '#FF3B30' // Apple's system red
+    }
 });
 
 export default UserDevices;
