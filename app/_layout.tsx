@@ -27,7 +27,7 @@ export default function _layout() {
   return (
     <ThemeProvider>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/home/index" options={{ headerShown: false }} />
         <Stack.Screen name="index" />
         {/* navigate.navigation use option */}
         <Stack.Screen name="login" />

@@ -22,7 +22,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="home/[deviceId]"
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (

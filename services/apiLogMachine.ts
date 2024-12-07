@@ -2,8 +2,8 @@ import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '@/services/baseUrl';
 
-// Define the structure of each machine log
-export type LogMachine = {
+// Define the structure of each device log
+export type DeviceLog = {
   id: number;
   machine_id: number;
   lat: string;
@@ -16,6 +16,26 @@ export type LogMachine = {
   deleted_at: string | null;
   created_at: string;
   updated_at: string;
+};
+
+// Define the structure of each device
+export type Device = {
+  id: number;
+  device_id: number; 
+  user_id: number;  
+  lat: string;
+  lng: string;
+  place_name: string;
+  suhu: number;
+  kecepatan_angin: number;
+  tekanan_udara: number;
+  kelembaban: number;
+  kondisi_baik: number;
+  active: number;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+  device_logs: DeviceLog[]; // Array of logs associated with the device
 };
 
 // Export the structure of the paginated response
@@ -39,8 +59,11 @@ export type PaginatedResponse<T> = {
   total: number;
 };
 
+// Define the structure of the response for device logs
+export type DeviceLogsResponse = PaginatedResponse<Device>;
+
 // Function to fetch machine logs
-export const fetchMachineLogs = async (page: number = 1): Promise<PaginatedResponse<LogMachine>> => {
+export const fetchMachineLogs = async (machineId: number, page: number = 1): Promise<DeviceLogsResponse> => {
   const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
   console.log('Using token:', token); // Log the token to check its value
 
@@ -56,7 +79,7 @@ export const fetchMachineLogs = async (page: number = 1): Promise<PaginatedRespo
 
   try {
     // Make the GET request and specify the expected response type
-    const fetchDevice: AxiosResponse<PaginatedResponse<LogMachine>> = await client.get('/api/device/history', config);
+    const fetchDevice: AxiosResponse<DeviceLogsResponse> = await client.get(`/api/device/history/${machineId}`, config);
     
     // Check if the response data is structured correctly
     if (!fetchDevice.data || !fetchDevice.data.data) {
@@ -64,15 +87,22 @@ export const fetchMachineLogs = async (page: number = 1): Promise<PaginatedRespo
     }
 
     // Access the data array from the response
-    const machines: LogMachine[] = fetchDevice.data.data;
+    const devices: Device[] = fetchDevice.data.data;
 
-    // Check if there are any machines returned
-    if (machines.length > 0) {
-      machines.forEach(machine => {
-        console.log(`Data suhu for machine_id "${machine.machine_id}": "${machine.suhu}"`);
+    // Check if there are any devices returned
+    if (devices.length > 0) {
+      devices.forEach(device => {
+        console.log(`Device ID: ${device.id}, Place: ${device.place_name}`);
+        if (device.device_logs && Array.isArray(device.device_logs)) {
+          device.device_logs.forEach(log => {
+            console.log(`Data suhu for machine_id "${log.machine_id}": "${log.suhu}"`);
+          });
+        } else {
+          console.log(`No logs found for device ID: ${device.id}`);
+        }
       });
     } else {
-      console.log('No machines found.');
+      console.log('No devices found.');
     }
 
     return fetchDevice.data; // Return the entire paginated response
@@ -80,7 +110,7 @@ export const fetchMachineLogs = async (page: number = 1): Promise<PaginatedRespo
     // Enhanced error handling
     if (axios.isAxiosError(err)) {
       console.error('Axios error:', err.response?.data || err.message);
-  } else {
+    } else {
       console.error('Unexpected error:', err);
     }
     throw err; // Rethrow the error for further handling

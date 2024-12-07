@@ -33,10 +33,10 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
   };
 
   try {
-    console.log('Attempting login with:', credentials.email);
+    // console.log('Attempting login with:', credentials.email);
     
     const response: AxiosResponse<LoginResponse> = await client.post('/api/login', credentials, config);
-    console.log('Login response status:', response.data.status);
+    // console.log('Login response status:', response.data.status);
 
     if (!response.data.status) {
       throw new Error(response.data.message);
@@ -54,7 +54,7 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const errorMessage = err.response?.data?.message || 'Authentication failed';
-      console.log('Login error details:', err.response?.data);
+      // console.log('Login error details:', err.response?.data);
       throw new Error(errorMessage);
     }
     throw err;
@@ -69,7 +69,7 @@ export const isLoggedIn = async (): Promise<boolean> => {
     ]);
     return !!(token && userData);
   } catch (error) {
-    console.log('Login status check failed:', error);
+    // console.log('Login status check failed:', error);
     return false;
   }
 };
