@@ -10,8 +10,8 @@ export default function RekapHujan() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchMachineLogs();
-        setWeatherDataArray(data);
+        // const data = await fetchMachineLogs();
+        // setWeatherDataArray(data);
       } catch (err) {
         setError('Failed to fetch data');
         console.error(err);

@@ -23,19 +23,25 @@ export type Device = {
   id: number;
   device_id: number; 
   user_id: number;  
-  lat: string;
-  lng: string;
-  place_name: string;
-  suhu: number;
-  kecepatan_angin: number;
-  tekanan_udara: number;
-  kelembaban: number;
-  kondisi_baik: number;
-  active: number;
   deleted_at: string | null;
   created_at: string;
   updated_at: string;
-  device_logs: DeviceLog[]; // Array of logs associated with the device
+  device: {
+    id: number;
+    lat: string;
+    lng: string;
+    place_name: string;
+    suhu: number;
+    kecepatan_angin: number;
+    tekanan_udara: number;
+    kelembaban: number;
+    kondisi_baik: number;
+    active: number;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+    device_logs: DeviceLog[];
+  };
 };
 
 // Export the structure of the paginated response
@@ -81,38 +87,27 @@ export const fetchMachineLogs = async (machineId: number, page: number = 1): Pro
     // Make the GET request and specify the expected response type
     const fetchDevice: AxiosResponse<DeviceLogsResponse> = await client.get(`/api/device/history/${machineId}`, config);
     
+    console.log('Raw API Response:', JSON.stringify(fetchDevice.data, null, 2));
+
     // Check if the response data is structured correctly
     if (!fetchDevice.data || !fetchDevice.data.data) {
       throw new Error('Invalid response structure');
     }
 
     // Access the data array from the response
-    const devices: Device[] = fetchDevice.data.data;
+    // const devices: Device[] = fetchDevice.data.data;
 
-    // Check if there are any devices returned
-    if (devices.length > 0) {
-      devices.forEach(device => {
-        console.log(`Device ID: ${device.id}, Place: ${device.place_name}`);
-        if (device.device_logs && Array.isArray(device.device_logs)) {
-          device.device_logs.forEach(log => {
-            console.log(`Data suhu for machine_id "${log.machine_id}": "${log.suhu}"`);
-          });
-        } else {
-          console.log(`No logs found for device ID: ${device.id}`);
-        }
-      });
-    } else {
-      console.log('No devices found.');
-    }
+    // console.log('Devices array:', JSON.stringify(devices, null, 2));
 
-    return fetchDevice.data; // Return the entire paginated response
+    return fetchDevice.data;
   } catch (err) {
-    // Enhanced error handling
     if (axios.isAxiosError(err)) {
-      console.error('Axios error:', err.response?.data || err.message);
-    } else {
-      console.error('Unexpected error:', err);
+      console.error('API Error Details:', {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data
+      });
     }
-    throw err; // Rethrow the error for further handling
+    throw err;
   }  
 };

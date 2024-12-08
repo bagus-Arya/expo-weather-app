@@ -13,68 +13,81 @@ const Riwayat: React.FC = () => {
     total: number;
     currentPage: number;
     lastPage: number;
+    perPage: number;
   }>({
     total: 0,
     currentPage: 1,
-    lastPage: 1
+    lastPage: 1,
+    perPage: 10,
   });
 
-  const fetchLogs = async (page: number = 1) => {
+  const getMachineId = async () => {
+    try {
+      const id = await AsyncStorage.getItem('machineId');
+      if (id !== null) {
+        console.log("Riwayat id machine: "+id);
+        setMachineId(id);
+      } else {
+        setError('No machineId found in local storage.');
+      }
+    } catch (err) {
+      setError('Failed to retrieve machineId: ' + (err instanceof Error ? err.message : 'Unknown error'));
+    }
+  };
+
+  const fetchLogs = async (machineId: number, page: number = 1) => {
     if (!machineId) {
       setError('Machine ID is not available.');
       return;
     }
-
+  
     try {
       setLoading(true);
-      const response: DeviceLogsResponse = await fetchMachineLogs(Number(machineId), page);
-      setMachines(response.data[0]?.device_logs || []); // Accessing device_logs from the first device
+      const response: DeviceLogsResponse = await fetchMachineLogs(machineId, page);
+      // console.log('Response:', response);
+
+      const deviceLogs = response.data[0]?.device?.device_logs || [];
+      setMachines(deviceLogs);
       setPagination({
         total: response.total,
         currentPage: response.current_page,
-        lastPage: response.last_page
+        lastPage: response.last_page,
+        perPage: response.per_page,
       });
+
     } catch (err) {
       console.error('Error fetching machine logs:', err);
-      setError(`Failed to fetch machine logs: ${JSON.stringify(err)}`);
+      setError(`Failed to fetch machine logs: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const getMachineId = async () => {
-      try {
-        const id = await AsyncStorage.getItem('machineId');
-        if (id !== null) {
-          console.log("Riwayat id machine: "+id);
-          setMachineId(id);
-        } else {
-          setError('No machineId found in local storage.');
-        }
-      } catch (err) {
-        setError('Failed to retrieve machineId: ' + (err instanceof Error ? err.message : 'Unknown error'));
-      }
-    };
-
-    getMachineId();
-  }, []);
-
-  useEffect(() => {
-    fetchLogs();
-  }, []);
-
   const handleNextPage = () => {
-    if (pagination.currentPage < pagination.lastPage) {
-      fetchLogs(pagination.currentPage + 1);
+    if (pagination.currentPage < pagination.lastPage && machineId) {
+      fetchLogs(Number(machineId), pagination.currentPage + 1);
     }
   };
 
   const handlePrevPage = () => {
-    if (pagination.currentPage > 1) {
-      fetchLogs(pagination.currentPage - 1);
+    if (pagination.currentPage > 1 && machineId) {
+      fetchLogs(Number(machineId), pagination.currentPage - 1);
     }
   };
+
+  useEffect(() => {
+    const initData = async () => {
+      await getMachineId();
+    };
+  
+    initData();
+  }, []);
+  
+  useEffect(() => {
+    if (machineId) {
+      fetchLogs(Number(machineId), pagination.currentPage);
+    }
+  }, [machineId, pagination.currentPage]);
 
   const renderMachineCard = (machine: DeviceLog) => (
     <View key={machine.id} style={styles.card}>
@@ -156,7 +169,7 @@ const Riwayat: React.FC = () => {
         {machines.length > 0 ? (
           machines.map(renderMachineCard)
         ) : (
-          <Text style={styles.noDataText}>No machine logs available.</Text>
+          <Text style={styles.noDataText}>{}No machine logs available.</Text>
         )}
       </ScrollView>
       

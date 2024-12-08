@@ -7,7 +7,8 @@ import {
   Animated, 
   ScrollView, 
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -26,8 +27,7 @@ export default function Home() {
   const [deviceData, setDeviceData] = useState<DevicePredict | null>(null);
   const [predictedWeather, setPredictedWeather] = useState<PredictedWeather[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const refreshInterval = 10000; // 10 second
-
+  // const refreshInterval = 60000; // 1 minute (100000 milliseconds = 100 seconds = 1.67 minutes)
   // const deviceId = String(item.device.id);
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -60,39 +60,40 @@ export default function Home() {
     };
   }, []);
 
+  const getDeviceList = async () => {
+
+    if (deviceId === undefined) return;
+    
+    const idToStore = Array.isArray(deviceId) ? deviceId[0] : deviceId;
+    await AsyncStorage.setItem('machineId', idToStore);
+
+    try {
+        const deviceData: DevicePredict = await fetchDeviceLatest(Number(deviceId));
+        // console.log('Fetched predict home:', deviceData);
+        setDeviceData(deviceData);
+        setPredictedWeather(deviceData.data);
+    } catch (err) {
+        // console.error('Error fetching devices:', err);
+        if (err instanceof Error) {
+            setError(`Failed to fetch devices: ${err.message}`);
+        } else {
+            setError('Failed to fetch devices: Unknown error occurred.');
+        }
+    } finally {
+        setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getDeviceList = async () => {
+    getDeviceList();
 
-      if (deviceId === undefined) return;
-      
-      const idToStore = Array.isArray(deviceId) ? deviceId[0] : deviceId;
-      await AsyncStorage.setItem('machineId', idToStore);
+    // const intervalId = setInterval(() => {
+    //   getDeviceList();
+    // }, refreshInterval);
 
-      try {
-          const deviceData: DevicePredict = await fetchDeviceLatest(Number(deviceId));
-          // console.log('Fetched predict home:', deviceData);
-          setDeviceData(deviceData);
-          setPredictedWeather(deviceData.data);
-      } catch (err) {
-          // console.error('Error fetching devices:', err);
-          if (err instanceof Error) {
-              setError(`Failed to fetch devices: ${err.message}`);
-          } else {
-              setError('Failed to fetch devices: Unknown error occurred.');
-          }
-      } finally {
-          setLoading(false);
-      }
-    };
-
-    const intervalId = setInterval(() => {
-      getDeviceList();
-    }, refreshInterval);
-
-    return () => {
-        clearInterval(intervalId);
-    };
-
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
   }, [deviceId]);
 
   const translateY = scrollY.interpolate({
@@ -102,16 +103,63 @@ export default function Home() {
   });
 
   // Function to determine the icon based on the condition
-  const getWeatherIcon = (condition: string): any => {
-    switch (condition) {
-      case 'Kondisi Cuaca Baik':
-        return require('@/assets/images/tabs/Sun.png'); // Sunny
-      case 'Kondisi Cuaca Buruk':
-        return require('@/assets/images/tabs/Raining.png'); // Rainy
-      case 'Kondisi Tidak Diketahui':
-        return require('@/assets/images/tabs/Thunder.png'); // Cloudy
-      default:
-        return require('@/assets/images/tabs/Sun.png'); // Default to sunny
+  const getWeatherIcon = (kelembaban: number) => {
+    if (kelembaban >= 90) {
+      return require('@/assets/images/tabs/Raining.png'); 
+    } else if (kelembaban >= 60 && kelembaban <= 90) {
+      return require('@/assets/images/tabs/Thunder.png'); 
+    } else {
+      return require('@/assets/images/tabs/Sun.png');
+    }
+  };
+
+  const getWindClassification = (condition: number): any => {
+    if (condition >= 15) {
+      return "Angin Kencang"; 
+    } else if (condition >= 5 && condition <= 14) {
+      return "Angin Sedang"; 
+    } else {
+      return "Normal";
+    }
+  };
+
+  const getHumidityClassification = (condition: number): any => {
+    if (condition >= 90) {
+      return "Hujan"; 
+    } else if (condition >= 60 && condition <= 89) {
+      return "Berawan"; 
+    } else {
+      return "Terang";
+    }
+  };
+
+  const getMilibarClassification = (condition: number, conditions : number): any => {
+    if (condition <= 990 && conditions >= 90) {
+      return "Hujan"; 
+    } else if (condition >= 990 && condition <= 89) {
+      return "Berawan"; 
+    } else {
+      return "Terang";
+    }
+  };
+
+  const handleRefresh = async () => {
+    try {
+      getDeviceList();
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+    }
+  };
+
+  const openMaps = () => {
+    const latitude = deviceData?.latest.lat;
+    const longitude = deviceData?.latest.lng;
+    if (latitude && longitude) {
+      const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      Linking.openURL(mapUrl).catch(err => console.error("An error occurred", err));
+    } else {
+      console.error("Latitude and longitude are not available.");
     }
   };
 
@@ -150,24 +198,34 @@ export default function Home() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.welcomeContainer}>
+      <View style={[styles.welcomeContainer,
+        (getMilibarClassification(deviceData?.latest.tekanan_udara ? deviceData.latest.tekanan_udara : 0 , deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0) === "Hujan")? styles.welcomeContainerDark:styles.welcomeContainer, 
+      ]}>
           <TouchableOpacity 
             onPress={() => router.push('/userDevices')}
-            style={styles.backButton} 
+            style={[styles.backButton,
+              (getMilibarClassification(deviceData?.latest.tekanan_udara ? deviceData.latest.tekanan_udara : 0 , deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0) === "Hujan")? styles.backButtonDark:styles.backButton, 
+            ]} 
           >
             <MaterialIcons name='arrow-back' size={30} color="#fff" />
             <Text
               style={styles.backText}
             >
-              Kembali
+              My Devices
             </Text>
           </TouchableOpacity>
       </View>
 
-      <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
-        <Text style={styles.location}>{deviceData?.latest.device.place_name}</Text>
+      <Animated.View style={[
+        styles.card,
+        (getMilibarClassification(deviceData?.latest.tekanan_udara ? deviceData.latest.tekanan_udara : 0 , deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0) === "Hujan")? styles.cardDark:styles.card, 
+        { transform: [{ translateY }] }
+        ]}>
+                
+        <Text style={styles.location} onPress={openMaps}>{deviceData?.latest.device.place_name}</Text>
+
         <Animated.Image 
-          source={getWeatherIcon("Kondisi Cuaca Buruk")} 
+          source={getWeatherIcon(deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0)} 
           style={[
             styles.icon,
             {
@@ -182,9 +240,14 @@ export default function Home() {
           resizeMode="contain" 
         />
         <Text style={styles.temperature}>{deviceData?.latest.suhu} °C</Text>
-        <Text style={styles.condition}>
-          {formattedDate}
-        </Text>
+        <View
+          style={styles.reloadRow}
+        >
+          <Text style={styles.condition}>
+            {formattedDate}
+          </Text> 
+          <MaterialIcons name='loop' size={20} color="#fff"  onPress={handleRefresh} />
+        </View>
 
         {/* Weather Details */}
         <View style={styles.weatherRow}>
@@ -194,7 +257,7 @@ export default function Home() {
               style={styles.iconSmall} 
               resizeMode="contain" 
             />
-            <Text style={styles.weatherText}>Kecepatan Angin</Text>
+            <Text style={styles.weatherText}>{getWindClassification(deviceData?.latest.kecepatan_angin ? deviceData.latest.kecepatan_angin : 0)}</Text>
             <Text style={styles.weatherDetail}>{deviceData?.latest.kecepatan_angin} km/h</Text>
           </View>
           <View style={styles.weatherDetailContainer}>
@@ -203,7 +266,7 @@ export default function Home() {
               style={styles.iconSmall} 
               resizeMode="contain" 
             />
-            <Text style={styles.weatherText}>Kelembaban</Text>
+            <Text style={styles.weatherText}>{getHumidityClassification(deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0)}</Text>
             <Text style={styles.weatherDetail}>{deviceData?.latest.kelembaban} %</Text>
           </View>
           <View style={styles.weatherDetailContainer}>
@@ -212,8 +275,8 @@ export default function Home() {
               style={styles.iconSmall} 
               resizeMode="contain" 
             />
-            <Text style={styles.weatherText}>Tekanan Udara</Text>
-            <Text style={styles.weatherDetail}>{deviceData?.latest.kecepatan_angin} hPa</Text>
+            <Text style={styles.weatherText}>{getMilibarClassification(deviceData?.latest.tekanan_udara ? deviceData.latest.tekanan_udara : 0 , deviceData?.latest.kelembaban ? deviceData.latest.kelembaban : 0)}</Text>
+            <Text style={styles.weatherDetail}>{deviceData?.latest.tekanan_udara} mBar</Text>
           </View>
         </View>
       </Animated.View>
@@ -227,7 +290,8 @@ export default function Home() {
         {predictedWeather.slice(0, 3).map((weather, index) => {
           const temperatureData = predictedWeather.find(item => item.date === weather.date && item.predicted_suhu !== undefined);
           const conditionData = predictedWeather.find(item => item.date === weather.date && item.condition !== undefined);
-          
+          const dt = Math.round(temperatureData?.predicted_suhu || 0);
+
           return (
               <View key={index} style={styles.forecastCard}>
                   <Text style={styles.forecastText}>{new Date(weather.date).toLocaleDateString(undefined,{
@@ -235,7 +299,7 @@ export default function Home() {
                     month: 'long',
                     day: 'numeric',
                   })}</Text>
-                  <Text style={styles.forecastTemperature}>{temperatureData ? temperatureData.predicted_suhu : 'N/A'} °C</Text>
+                  <Text style={styles.forecastTemperature}>{temperatureData ? dt : 'N/A'} °C</Text>
                   <Text style={styles.forecastCondition}>{conditionData ? conditionData.condition : 'Kondisi Tidak Diketahui'}</Text>
               </View>
           );
@@ -245,7 +309,9 @@ export default function Home() {
   );
 
 
-}const styles = StyleSheet.create({  container: {    flex: 1,
+}const styles = StyleSheet.create({  
+  container: {    
+    flex: 1,
     backgroundColor: '#040424',
   },
   card: {
@@ -254,16 +320,17 @@ export default function Home() {
     padding: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
     width: '100%',
-    marginBottom: 20,
+  },
+  cardDark: {
+    backgroundColor: '#17045e',
+    borderRadius: 15,
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    width: '100%',
   },
   location: {
     color: '#FFFFFF',
@@ -295,6 +362,10 @@ export default function Home() {
     width: '100%',
     marginTop: 20,
   },
+  reloadRow:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   weatherDetailContainer: {
     flex: 1,
     alignItems: 'center',
@@ -312,7 +383,6 @@ export default function Home() {
   forecastContainer: {
     flexDirection: 'row', 
     marginTop: 10,
-    paddingHorizontal: 20,
     width: '100%', 
   },
   forecastCard: {
@@ -344,8 +414,23 @@ export default function Home() {
     borderRadius: 15,
     marginBottom: 10,
   },
+  welcomeContainerDark: {
+    padding: 20,
+    backgroundColor: '#17045e',
+    borderRadius: 15,
+    marginBottom: 10,
+  },
   backButton: {
     backgroundColor: '#FA8C2B',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    marginTop: 20,
+    borderRadius: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButtonDark: {
+    backgroundColor: '#17045e',
     paddingHorizontal: 15,
     paddingVertical: 8,
     marginTop: 20,

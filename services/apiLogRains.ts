@@ -24,7 +24,7 @@ export type RainyConditionsResponse = {
 };
 
 // Function to fetch machine logs
-export const fetchMachineLogs = async (): Promise<LogMachine[]> => {
+export const fetchMachineLogs = async (machineId: number, page: number = 1): Promise<LogMachine[]> => {
   const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
   console.log('Using token:', token); // Log the token to check its value
 
@@ -33,11 +33,14 @@ export const fetchMachineLogs = async (): Promise<LogMachine[]> => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`, // Use the token retrieved from AsyncStorage
     },
+    params: {
+      page: page,
+    }
   };
 
   try {
     // Make the GET request and specify the expected response type
-    const fetchDevice: AxiosResponse<RainyConditionsResponse> = await client.get('/api/device/weather/rainy', config);
+    const fetchDevice: AxiosResponse<RainyConditionsResponse> = await client.get(`/api/device/weather/${machineId}`, config);
     
     // Check if the response data is structured correctly
     if (!fetchDevice.data || !fetchDevice.data.rainy_conditions) {

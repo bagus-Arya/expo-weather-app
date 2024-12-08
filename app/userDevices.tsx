@@ -37,7 +37,6 @@ const UserDevices = () => {
     const [error, setError] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
     const [user, setUser] = useState<User | null>(null);
-    const refreshInterval = 10000; // 10 second
     const router = useRouter();
     const backAction = () => {
         // Prevent the default back action
@@ -84,14 +83,11 @@ const UserDevices = () => {
             }
         };
 
-        const intervalId = setInterval(() => {
-            getDevices();
-        }, refreshInterval);
+        getDevices();
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
         return () => {
             backHandler.remove();
-            clearInterval(intervalId);
         };
     }, [userId]);
 
@@ -110,15 +106,16 @@ const UserDevices = () => {
         getUserData();
       }, []);
 
-    const getCardImage = (suhu: number) => {
-        if (suhu < 25) {
+    const getCardImage = (kelembaban: number) => {
+        if (kelembaban >= 90) {
             return require('@/assets/images/raining.jpg'); 
-        } else if (suhu >= 25 && suhu <= 30) {
-            return require('@/assets/images/winter.jpg'); 
+        } else if (kelembaban >= 60 && kelembaban <= 90) {
+            return require('@/assets/images/cloudy.jpg'); 
         } else {
             return require('@/assets/images/winter.jpg');
         }
     };
+    
     const handleLogout = async () => {
         try {
           await logout();
@@ -131,7 +128,7 @@ const UserDevices = () => {
         } finally {
           // Clear any remaining app state here if needed
         }
-      };
+    };
 
     if (loading) {
         return (
@@ -187,7 +184,7 @@ const UserDevices = () => {
                     style={styles.deviceContainer}
                   >
                     <ImageBackground 
-                        source={getCardImage(item.device.logs.suhu)}
+                        source={getCardImage(item.device.logs.kelembaban)}
                         style={styles.imageBackground}
                         imageStyle={styles.imageStyle}
                     >
@@ -278,7 +275,7 @@ const styles = StyleSheet.create({
         width: '110%',
         height: 165,
         justifyContent: 'flex-end', 
-        padding: 15, 
+        padding: 15,
     },
     imageStyle: {
         borderRadius: 10,
@@ -364,7 +361,7 @@ const styles = StyleSheet.create({
         color: '#040424',
         fontSize: 16,
         opacity: 0.8,
-      },
+      }
 });
 
 export default UserDevices;
