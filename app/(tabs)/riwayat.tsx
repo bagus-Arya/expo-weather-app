@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Riwayat: React.FC = () => {
  
-  const [machineId, setMachineId] = useState<string | null>(null);
+  const [machineId, setMachineId] = useState<number | null>(null);
   const [machines, setMachines] = useState<DeviceLog[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -26,7 +26,7 @@ const Riwayat: React.FC = () => {
       const id = await AsyncStorage.getItem('machineId');
       if (id !== null) {
         console.log("Riwayat id machine: "+id);
-        setMachineId(id);
+        setMachineId(Number(id));
       } else {
         setError('No machineId found in local storage.');
       }
@@ -167,7 +167,7 @@ const Riwayat: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {machines.length > 0 ? (
-          machines.map(renderMachineCard)
+          machines.reverse().map(renderMachineCard)
         ) : (
           <Text style={styles.noDataText}>{}No machine logs available.</Text>
         )}
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardHeader: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#040424',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderTopLeftRadius: 10,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   cardFooter: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#040424',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderBottomLeftRadius: 10,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   machineIdText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FA8C2B',
   },
   dataRow: {
     flexDirection: 'row',
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   },
   timestampText: {
     fontSize: 12,
-    color: '#666',
+    color: '#FA8C2B',
     textAlign: 'right',
   },
   errorText: {
@@ -265,9 +265,9 @@ const styles = StyleSheet.create({
     borderTopColor: '#e0e0e0',
   },
   paginationButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#040424',
     paddingVertical: 10,
-     paddingHorizontal: 15,
+    paddingHorizontal: 15,
     borderRadius: 5,
   },
   paginationButtonText: {

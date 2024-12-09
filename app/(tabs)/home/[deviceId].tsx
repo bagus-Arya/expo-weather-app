@@ -32,6 +32,8 @@ export default function Home() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const deviceId = params?.deviceId;
+  const [loadingIcon, setLoadingIcon] = useState(false);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     console.log('Current machineId:', deviceId);
@@ -144,12 +146,37 @@ export default function Home() {
   };
 
   const handleRefresh = async () => {
+    if (loadingIcon) return;
+    setLoadingIcon(true);
+
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      })
+    ).start();
+
     try {
       getDeviceList();
     } catch (error) {
       console.error('Refresh error:', error);
     } finally {
+      setTimeout(() => {
+        setLoading(false);
+        rotateAnim.setValue(0);
+      }, 3000);
     }
+  };
+
+  // Interpolate the rotation value
+  const rotateInterpolate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+  
+  const animatedStyle = {
+    transform: [{ rotate: rotateInterpolate }],
   };
 
   const openMaps = () => {
@@ -240,13 +267,18 @@ export default function Home() {
           resizeMode="contain" 
         />
         <Text style={styles.temperature}>{deviceData?.latest.suhu} °C</Text>
+        
         <View
           style={styles.reloadRow}
         >
           <Text style={styles.condition}>
             {formattedDate}
           </Text> 
-          <MaterialIcons name='loop' size={20} color="#fff"  onPress={handleRefresh} />
+          <TouchableOpacity onPress={handleRefresh}>
+            <Animated.View style={animatedStyle}>
+              <MaterialIcons name='loop' size={20} color="#fff" />
+            </Animated.View>
+          </TouchableOpacity>
         </View>
 
         {/* Weather Details */}

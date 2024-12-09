@@ -87,7 +87,7 @@ export const fetchMachineLogs = async (machineId: number, page: number = 1): Pro
     // Make the GET request and specify the expected response type
     const fetchDevice: AxiosResponse<DeviceLogsResponse> = await client.get(`/api/device/history/${machineId}`, config);
     
-    console.log('Raw API Response:', JSON.stringify(fetchDevice.data, null, 2));
+    // console.log('Raw API Response:', JSON.stringify(fetchDevice.data, null, 2));
 
     // Check if the response data is structured correctly
     if (!fetchDevice.data || !fetchDevice.data.data) {
