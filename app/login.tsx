@@ -14,6 +14,7 @@ import {
 import React from "react";
 import { router } from "expo-router";
 import { login } from '../services/apiAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const [email, setEmail] = React.useState<string>("");
@@ -26,33 +27,35 @@ export default function Login() {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-
+  
     setIsLoading(true);
+    
     try {
       const response = await login({ email, password });
+      // console.log('Login response:', response);
+      
       if (response.status) {
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+        await AsyncStorage.setItem('userToken', response.token);
+        await AsyncStorage.setItem('userEmail', email);
         router.push('/userDevices');
       } else {
-        Alert.alert('Error', response.message);
+        Alert.alert('Error', response.message || 'Login failed after');
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log("Login error:", error.message);
-        Alert.alert(
-          'Error',
-          error.message
-        );
-      } else {
-        console.log("Login error:", String(error));
-        Alert.alert(
-          'Error',
-          'An unexpected error occurred. Please try again.'
-        );
-      }
+    } catch (error: any) {
+
+      console.log('Failed login attempt for email:', email);
+      console.log('Error details:', {
+        error: error,
+        timestamp: new Date().toISOString(),
+        emailAttempt: email
+      });
+      
+      Alert.alert('Error', `Login failed for ${email}`);
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <SafeAreaView style={styles.container}>

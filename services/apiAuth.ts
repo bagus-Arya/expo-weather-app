@@ -37,6 +37,7 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
     
     const response: AxiosResponse<LoginResponse> = await client.post('/api/login', credentials, config);
     // console.log('Login response status:', response.data.status);
+    // console.log('Raw response:', JSON.stringify(response, null, 2));
 
     if (!response.data.status) {
       throw new Error(response.data.message);

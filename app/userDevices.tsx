@@ -45,6 +45,22 @@ const UserDevices = () => {
     };
 
     useEffect(() => {
+        const checkAuth = async () => {
+          try {
+            const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+              router.replace('/login');
+            }
+          } catch (error) {
+            console.error('Auth check failed:', error);
+            router.replace('/login');
+          }
+        };
+      
+        checkAuth();
+      }, []);
+
+    useEffect(() => {
         const getUserId = async () => {
             try {
                 const userDataString = await AsyncStorage.getItem('userData');
@@ -118,13 +134,14 @@ const UserDevices = () => {
     
     const handleLogout = async () => {
         try {
-          await logout();
-          setUser(null);
-          await AsyncStorage.clear(); // Clear all stored data
-          router.replace('/login');
+            await AsyncStorage.removeItem('isLoggedIn');
+            await logout();
+            setUser(null);
+            await AsyncStorage.clear();
+            router.replace('/login');
         } catch (error) {
-          console.log('Logout error details:', error);
-          router.replace('/login');
+            console.log('Logout error details:', error);
+            router.replace('/login');
         } finally {
           // Clear any remaining app state here if needed
         }
