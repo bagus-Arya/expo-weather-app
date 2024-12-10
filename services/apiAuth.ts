@@ -53,7 +53,7 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
     return response.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const errorMessage = err.response?.data?.message || 'Authentication failed';
+      const errorMessage = err.response?.data;
       // console.log('Login error details:', err.response?.data);
       throw new Error(errorMessage);
     }

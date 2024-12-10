@@ -35,11 +35,20 @@ export default function Login() {
       } else {
         Alert.alert('Error', response.message);
       }
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'Failed to login. Please check your credentials and try again.'
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log("Login error:", error.message);
+        Alert.alert(
+          'Error',
+          error.message
+        );
+      } else {
+        console.log("Login error:", String(error));
+        Alert.alert(
+          'Error',
+          'An unexpected error occurred. Please try again.'
+        );
+      }
     } finally {
       setIsLoading(false);
     }

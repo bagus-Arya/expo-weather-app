@@ -39,15 +39,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="rekapHujan"
-        options={{
-          title: 'Rekap hujan',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'documents-sharp' : 'documents-outline'} color={color} size={24} />
-          ),
-        }}
-      />
   
     </Tabs>
   );
