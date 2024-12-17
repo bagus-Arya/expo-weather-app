@@ -26,12 +26,29 @@ export default function _layout() {
   
   return (
     <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: true }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         {/* navigate.navigation use option */}
-        <Stack.Screen name="login" />
-        <Stack.Screen name="+not-found" />
+        <Stack.Screen 
+          name="login" 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="userDevices" 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="sosView" 
+          options={{ 
+            headerShown: true, 
+            title: 'Emergency',
+            headerStyle: { backgroundColor: '#B12323' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' },
+          }} 
+        />
+        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

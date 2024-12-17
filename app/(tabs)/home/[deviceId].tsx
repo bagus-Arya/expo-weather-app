@@ -341,7 +341,8 @@ export default function Home() {
   );
 
 
-}const styles = StyleSheet.create({  
+}
+const styles = StyleSheet.create({  
   container: {    
     flex: 1,
     backgroundColor: '#040424',
@@ -443,13 +444,15 @@ export default function Home() {
   welcomeContainer: {
     padding: 20,
     backgroundColor: '#FA8C2B',
-    borderRadius: 15,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     marginBottom: 10,
   },
   welcomeContainerDark: {
     padding: 20,
     backgroundColor: '#17045e',
-    borderRadius: 15,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     marginBottom: 10,
   },
   backButton: {

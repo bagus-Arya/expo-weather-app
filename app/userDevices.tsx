@@ -185,11 +185,29 @@ const UserDevices = () => {
                             <MaterialIcons name='logout' size={30} color="#fff" />
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> 
             )}
 
+             {/* TODO: A    dd Button Emergency
+             route to new view called sosView
+             in new view show SOS button and current location based on android device location */}
+
+            <View>
+                <Pressable
+                    onPress={() => {
+                        router.push('/sosView')
+                    }}
+                >
+                    <View style={styles.sosContainer}>
+                        <Text style={styles.sosText}>
+                            Emergency SOS
+                        </Text>
+                    </View>
+                </Pressable>
+            </View>
+
             {devices && devices.length > 0 ? (
-            <FlatList
+            <FlatList 
                 data={devices}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
@@ -357,28 +375,41 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 15,
         marginBottom: 10,
-      },
-      welcomeHeader: {
+    },
+    sosContainer: {
+        padding: 20,
+        backgroundColor: '#B12323',
+        justifyContent:'space-evenly',
+        alignItems: 'center',
+        borderRadius: 15,
+        marginBottom: 10,
+    },
+    welcomeHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-      },
-      logoutButton: {
+    },
+    logoutButton: {
         backgroundColor: '#040424',
         paddingHorizontal: 8,
         paddingVertical: 8,
         borderRadius: 15,
-      },
-      welcomeText: {
+    },
+    welcomeText: {
         color: '#040424',
         fontSize: 24,
         fontWeight: 'bold',
-      },
-      emailText: {
+    },
+    emailText: {
         color: '#040424',
         fontSize: 16,
         opacity: 0.8,
-      }
+    },
+    sosText: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
 });
 
 export default UserDevices;
