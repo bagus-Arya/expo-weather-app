@@ -14,7 +14,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-EFISTRAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-EFISTRAC.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		F5909917BEE44D8180047BD0 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECE2310D01146C9907C2C6E /* noop-file.swift */; };
+		A7994BE846844AD6858447DA /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0724F96DF9AC40899CA2C7AE /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,8 +31,8 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-EFISTRAC/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		3ECE2310D01146C9907C2C6E /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "EFISTRAC/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
-		6FF185FD3DB04A909A21649D /* EFISTRAC-Bridging-Header.h */ = {isa = PBXFileReference; name = "EFISTRAC-Bridging-Header.h"; path = "EFISTRAC/EFISTRAC-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		0724F96DF9AC40899CA2C7AE /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "EFISTRAC/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		7076AC938DF349FDA834E481 /* EFISTRAC-Bridging-Header.h */ = {isa = PBXFileReference; name = "EFISTRAC-Bridging-Header.h"; path = "EFISTRAC/EFISTRAC-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +57,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				3ECE2310D01146C9907C2C6E /* noop-file.swift */,
-				6FF185FD3DB04A909A21649D /* EFISTRAC-Bridging-Header.h */,
+				0724F96DF9AC40899CA2C7AE /* noop-file.swift */,
+				7076AC938DF349FDA834E481 /* EFISTRAC-Bridging-Header.h */,
 			);
 			name = EFISTRAC;
 			sourceTree = "<group>";
@@ -198,7 +198,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				09AC29E1C0D9434F85FD3CC1 /* EFISTRAC-Bridging-Header.h in Resources */,
+				A2AE452F955D4591832FF5E2 /* EFISTRAC-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +274,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				F5909917BEE44D8180047BD0 /* noop-file.swift in Sources */,
+				A7994BE846844AD6858447DA /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
