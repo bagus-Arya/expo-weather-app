@@ -34,3 +34,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# baseUrl
+/home/vandr/project-naga/cuaca-benoa-app/services/baseUrl.ts
